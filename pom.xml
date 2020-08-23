@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>rvu.application</groupId>
-	<artifactId>urlshortenapp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>urlshortenapp</name>
+	<artifactId>relink</artifactId>
+	<version>0.0.1</version>
+	<name>relink</name>
 	<description>Shorten links</description>
 
 	<properties>
@@ -77,7 +77,7 @@
 					<execution>
 						<id>npm install</id>
 						<goals>
-							<goal>npm-install</goal>
+							<goal>npm</goal>
 						</goals>
 					</execution>
 
