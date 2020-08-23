@@ -1,4 +1,4 @@
-package rvu.application.urlshortenapp;
+package rvu.application.relink;
 
 import java.util.Objects;
 

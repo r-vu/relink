@@ -1,4 +1,4 @@
-package rvu.application.urlshortenapp;
+package rvu.application.relink;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

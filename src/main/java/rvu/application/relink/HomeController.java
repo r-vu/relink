@@ -1,4 +1,4 @@
-package rvu.application.urlshortenapp;
+package rvu.application.relink;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
