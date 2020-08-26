@@ -34,3 +34,6 @@ build/
 
 ### Node.js ###
 /node_modules/
+
+### Misc ###
+/src/main/resources/static/built
