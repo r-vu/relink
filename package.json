@@ -6,27 +6,20 @@
         "type": "git",
         "url": "git@github.com:r-vu/relink"
     },
-
-    "keywords": [
-
-    ],
-
+    "keywords": [],
     "author": "Richard Vu",
     "bugs": {
         "url": "https://github.com/r-vu/relink/issues"
     },
-
     "homepage": "https://github.com/r-vu/relink",
     "dependencies": {
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "rest": "^2.0.0"
     },
-
     "scripts": {
         "watch": "webpack --watch -d --output ./target/classes/static/built/bundle.js"
     },
-
     "devDependencies": {
         "@babel/core": "^7.11.0",
         "@babel/preset-env": "^7.11.0",
