@@ -4,7 +4,6 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const client = require('./client');
 const follow = require('./follow');
-const reactDom = require('react-dom');
 
 const root = "/api";
 
@@ -30,7 +29,7 @@ class App extends React.Component {
         // return(<ShortURLList shortURLs = {this.state.shortURLs} />)
         return (
             <div>
-                {/* <CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/> */}
+                <CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/>
                 <ShortURLList 
                     shortURLs={this.state.shortURLs}
                     links={this.state.links}
@@ -255,11 +254,11 @@ class CreateDialog extends React.Component {
     }
 
     render() {
-        let inputs = this.props.attributes.map(attribute => {
+        let inputs = this.props.attributes.map(attribute =>
             <p key={attribute}>
                 <input type="text" placeholder={attribute} ref={attribute} className="field"/>
             </p>
-        });
+        );
 
         return (
             <div>
