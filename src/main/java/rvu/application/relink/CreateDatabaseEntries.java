@@ -23,5 +23,6 @@ public class CreateDatabaseEntries implements CommandLineRunner {
         this.repo.save(new ShortURL("Microsoft", "Apple"));
         this.repo.save(new ShortURL("nVidia", "AMD"));
         this.repo.save(new ShortURL("Pixar", "Disney"));
+        this.repo.save(new ShortURL("test123", "https://www.google.com/"));
     }
 }
