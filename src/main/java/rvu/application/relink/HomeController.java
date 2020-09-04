@@ -2,8 +2,8 @@ package rvu.application.relink;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class HomeController {
@@ -11,7 +11,25 @@ public class HomeController {
     @Autowired
     private ShortURLRepository repo;
     
-    @RequestMapping(value = "/")
+    @GetMapping(value = "/")
+    public String home(Model model) {
+        model.addAttribute("shortURLFormData", new ShortURLFormData());
+        return "home";
+    }
+
+    @PostMapping(value = "/")
+    public String createShortURL(@ModelAttribute ShortURLFormData shortURLFormData, Model model) {
+        try {
+            ShortURL shortURL = shortURLFormData.toShortURL();
+            repo.save(shortURL);
+            model.addAttribute("shortURLData", shortURL);
+        } catch (Exception e) {
+            model.addAttribute("exceptionInfo", e.getMessage());
+        }
+        return "success";
+    }
+
+    @GetMapping(value = "/table")
     public String index() {
         return "index";
     }
@@ -20,7 +38,7 @@ public class HomeController {
     public String redirect(@PathVariable String name) {
         ShortURL shortURL = repo.findByName(name);
         if (shortURL == null) {
-            return "redirect:/";
+            return "redirect:/table";
         } else {
             return "redirect:".concat(shortURL.getDest());
         }
