@@ -42,8 +42,7 @@ class App extends React.Component {
     }
 
     loadFromDatabase(pageSize) {
-        // use follow function, is custom
-        follow(client, root, [{rel: "shortURLs", params: {size: pageSize}}]).then(
+        client({params: {size: pageSize}}).then(
             shortURLCollection => {
                 return client({
                     method: "GET",
