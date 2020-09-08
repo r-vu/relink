@@ -261,8 +261,8 @@ class CreateDialog extends React.Component {
 
         return (
             <div>
-                <a href="#createEmployee">Create</a>
-                <div id="createEmployee" className="modalDialog">
+                <a href="#createShortURL">Create</a>
+                <div id="createShortURL" className="modalDialog">
                     <div>
                         <a href="#" title="Close" className="close">X</a>
                         <h2>Create new ShortURL</h2>
