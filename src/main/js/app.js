@@ -1,9 +1,10 @@
 "use strict";
 
-const React = require("react");
-const ReactDOM = require("react-dom");
-const client = require("./client");
-const follow = require("./follow");
+import React from "react";
+import ReactDOM from "react-dom";
+import client from "./client";
+
+import Table from "react-bootstrap/Table";
 
 const root = "/api";
 
@@ -172,15 +173,17 @@ class ShortURLList extends React.Component {
         return (
             <div>
                 <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
-                <table>
-                    <tbody>
+                <Table>
+                    <thead>
                         <tr>
                             <th>Name</th>
                             <th>Destination</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         {shortURLs}
                     </tbody>
-                </table>
+                </Table>
                 <div>
                     {navLinks}
                 </div>
