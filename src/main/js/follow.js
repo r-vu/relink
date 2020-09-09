@@ -1,3 +1,8 @@
+/**
+ * 
+ * @deprecated
+ * 
+ */
 module.exports = function follow(api, rootPath, relArray) {
     const root = api({
         method: 'GET',
