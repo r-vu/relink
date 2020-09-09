@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const client = require('./client');
-const follow = require('./follow');
+const React = require("react");
+const ReactDOM = require("react-dom");
+const client = require("./client");
+const follow = require("./follow");
 
 const root = "/api";
 
@@ -19,14 +19,10 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        // client({method: 'GET', path: '/api/shortURLs'}).then(response => {
-        //         this.setState({shortURLs: response.entity._embedded.shortURLs});
-        //     });
         this.loadFromDatabase(this.state.pageSize);
     }
 
     render() {
-        // return(<ShortURLList shortURLs = {this.state.shortURLs} />)
         return (
             <div>
                 <CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/>
@@ -173,18 +169,6 @@ class ShortURLList extends React.Component {
             navLinks.push(<button key="last" onClick={this.handleNavLast}>Last</button>)
         }
 
-        // return (
-        //     <table>
-        //         <tbody>
-        //             <tr>
-        //                 <th>Name</th>
-        //                 <th>Destination</th>
-        //             </tr>
-        //             {shortURLs}
-        //         </tbody>
-        //     </table>
-        // )
-
         return (
             <div>
                 <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
@@ -278,5 +262,5 @@ class CreateDialog extends React.Component {
 
 ReactDOM.render(
     <App />,
-    document.getElementById('react')
+    document.getElementById("react")
 )
