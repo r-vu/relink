@@ -42,7 +42,7 @@ class App extends React.Component {
     }
 
     loadFromDatabase(pageSize) {
-        client({params: {size: pageSize}}).then(
+        client({params: {"size": pageSize}}).then(
             shortURLCollection => {
                 return client({
                     method: "GET",
@@ -64,7 +64,7 @@ class App extends React.Component {
     }
 
     onCreate(newShortURL) {
-        follow(client, root, ["shortURLs"]).then(shortURLCollection => {
+        client().then(shortURLCollection => {
             return client({
                 method: "POST",
                 path: shortURLCollection.entity._links.self.href,
@@ -72,8 +72,7 @@ class App extends React.Component {
                 headers: {"Content-Type": "application/json"}
             })
         }).then(response => {
-            return follow(client, root, 
-                [{rel: "shortURLs", params: {"size": this.state.pageSize}}]);
+            return client({params: {"size": this.state.pageSize}});
         }).then(response => {
             if (typeof response.entity._links.last !== "undefined") {
                 this.onNavigate(response.entity._links.last.href);
@@ -261,8 +260,8 @@ class CreateDialog extends React.Component {
 
         return (
             <div>
-                <a href="#createShortURL">Create</a>
-                <div id="createShortURL" className="modalDialog">
+                <a href="#createshorturl">Create</a>
+                <div id="createshorturl" className="modalDialog">
                     <div>
                         <a href="#" title="Close" className="close">X</a>
                         <h2>Create new ShortURL</h2>
