@@ -33,8 +33,8 @@ public class HomeController {
     }
 
     @GetMapping(value = "/table")
-    public String index() {
-        return "index";
+    public String table() {
+        return "table";
     }
 
     @RequestMapping(value = "/to/{name}")
