@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.*;
 public class HomeController {
 
     @Autowired
-    private ShortURLRepository repo;
+    private ShortURLRepository shortURLRepo;
+
+    @Autowired
+    private RelinkUserRepository relinkUserRepo;
     
     @GetMapping(value = "/")
     public String home(Model model) {
@@ -21,7 +24,7 @@ public class HomeController {
     public String createShortURL(@ModelAttribute ShortURLFormData shortURLFormData, Model model) {
         try {
             ShortURL shortURL = shortURLFormData.toShortURL();
-            repo.save(shortURL);
+            shortURLRepo.save(shortURL);
             model.addAttribute("shortURLData", shortURL);
         } catch (Exception e) {
             model.addAttribute("exceptionInfo", e.getMessage());
@@ -36,7 +39,7 @@ public class HomeController {
 
     @RequestMapping(value = "/to/{name}")
     public String redirect(@PathVariable String name) {
-        ShortURL shortURL = repo.findByName(name);
+        ShortURL shortURL = shortURLRepo.findByName(name);
         if (shortURL == null) {
             return "redirect:/table";
         } else {
