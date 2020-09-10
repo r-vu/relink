@@ -12,13 +12,23 @@
     <title>Relink: Home</title>
 </head>
 
-<body class="text-center">
-    <form class="shortURLInputForm" action="#" th:action="@{/}" th:object="${shortURLFormData}" method="POST">
-        <h1 class="h1 mb-1 font-weight-normal">Relink</h1>
-        <h2>A URL Shortener!</h2>
-        <input class="form-input" autofocus size=40 type="text" placeholder="Enter a URL here" th:field="*{dest}"/>
-        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Relink!"/>
-    </form>
+<body class="d-flex flex-column">
+    <main>
+        <div class="container">
+            <form class="shortURLInputForm text-center" action="#" th:action="@{/}" th:object="${shortURLFormData}" method="POST">
+                <h1 class="h1 mb-1">Relink</h1>
+                <h2 class="font-weight-normal">A URL Shortener!</h2>
+                <input class="form-input" autofocus size=40 type="text" placeholder="Enter a URL here" th:field="*{dest}"/>
+                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Relink!"/>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer mb-auto py-3">
+        <div class="container">
+            <a href="https://www.github.com/r-vu/relink">Source Code &amp; Documentation</a>
+        </div>
+    </footer>
 
     <!-- BootStrap Dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -26,7 +36,5 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 
 </body>
-
-
 
 </html>
