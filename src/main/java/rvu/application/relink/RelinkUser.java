@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class RelinkUser {
 
-    private static final PasswordEncoder PASSWORD_HASHER = 
+    protected static final PasswordEncoder PASSWORD_HASHER = 
     PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @Id
@@ -29,7 +29,7 @@ public class RelinkUser {
     @JsonIgnore
     private String password;
 
-    private RelinkUser() {}
+    protected RelinkUser() {}
 
     public RelinkUser(String name, String password) {
         this.name = name;
@@ -42,6 +42,10 @@ public class RelinkUser {
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setName(String name) {
