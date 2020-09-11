@@ -18,11 +18,21 @@
     <title>Relink: Home</title>
 </head>
 
-<body class="text-center">
-    <div class="resultDiv" th:object="${shortURLData}">
-        <h2>URL successfully created</h2>
-        <p>Your shortened link is:</p>
-        <a class="resultLink" th:href="@{'http://relink.r-vu.net/to/' + ${shortURLData.name}}"></a>
+<body class="d-flex flex-column">
+
+    <div class="resultDiv container text-center" th:object="${shortURLData}">
+        <h2>URL successfully shortened!</h2>
+        <h3 class="font-weight-normal">Your shortened link is:</h3>
+        <h1>
+            <a
+                class="resultLink" target="_blank" rel="noopener"
+                th:href="@{${#request.getRequestURL()} + 'to/' + ${shortURLData.name}}">
+            </a>
+        </h1>
+    </div>
+
+    <div class="container m-auto text-center">
+        <h4><a href="/" class="text-secondary">Back to Home</a></h4>
     </div>
 
     <!-- BootStrap Dependencies -->
