@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>rvu.application</groupId>
 	<artifactId>relink</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<name>relink</name>
-	<description>Shorten links</description>
+	<description>A simple URL Shortener</description>
 
 	<properties>
 		<java.version>1.8</java.version>
