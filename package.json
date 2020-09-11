@@ -4,14 +4,14 @@
     "description": "A simple URL Shortener",
     "repository": {
         "type": "git",
-        "url": "git@github.com:r-vu/relink"
+        "url": "https://github.com/r-vu/relink"
     },
     "keywords": [],
     "author": "Richard Vu",
     "bugs": {
         "url": "https://github.com/r-vu/relink/issues"
     },
-    "homepage": "http://relink.r-vu.net",
+    "homepage": "https://github.com/r-vu/relink",
     "dependencies": {
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
