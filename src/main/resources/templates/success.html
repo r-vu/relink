@@ -9,30 +9,38 @@
 
     <meta name="theme-color" content="#563d7c">
 
-    <style>
-        .resultLink::after {
-            content: attr(href);
-        }
-    </style>
-
     <title>Relink: Home</title>
 </head>
 
-<body class="d-flex flex-column">
+<body>
 
-    <div class="resultDiv container text-center" th:object="${shortURLData}">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+        <a class="navbar-brand" href="/">Relink</a>
+        <div class="navbar-nav mr-auto">
+            <div class="d-flex flex-row" sec:authorize="!isAuthenticated()">
+                <a class="nav-link" href="/login">Login</a>
+            </div>
+
+            <div class="d-flex flex-row" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/logout">Logout</a>
+                <a class="nav-link" href="/table">Table</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container d-flex flex-column justify-content-center" >
+    <div class="align-self-center text-center" th:object="${shortURLData}">
         <h2>URL successfully shortened!</h2>
         <h3 class="font-weight-normal">Your shortened link is:</h3>
-        <h1>
+        <h3>
             <a
                 target="_blank" rel="noopener" th:with="url=${#request.getRequestURL()} + 'to/' + ${shortURLData.name}"
                 th:href="${url}" th:text="${url}">
             </a>
-        </h1>
-    </div>
+        </h3>
 
-    <div class="container m-auto text-center">
-        <h4><a href="/" class="text-secondary">Back to Home</a></h4>
+        <h5><a href="/" class="text-secondary">Back to Home</a></h5>
+    </div>
     </div>
 
     <!-- BootStrap Dependencies -->
