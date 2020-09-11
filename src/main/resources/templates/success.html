@@ -25,8 +25,8 @@
         <h3 class="font-weight-normal">Your shortened link is:</h3>
         <h1>
             <a
-                class="resultLink" target="_blank" rel="noopener"
-                th:href="@{${#request.getRequestURL()} + 'to/' + ${shortURLData.name}}">
+                target="_blank" rel="noopener" th:with="url=${#request.getRequestURL()} + 'to/' + ${shortURLData.name}"
+                th:href="${url}" th:text="${url}">
             </a>
         </h1>
     </div>
