@@ -237,6 +237,7 @@ class CreateDialog extends React.Component {
 
     closeDialog() {
         this.setState({showDialog: false});
+        window.location = "#";
     }
 
     handleSubmit(e) {
@@ -263,7 +264,7 @@ class CreateDialog extends React.Component {
             // </p>
             <Form.Group key={attribute} controlId={"createForm_".concat(attribute)}>
                 <Form.Label>{attribute}</Form.Label>
-                <Form.Control type={attribute} placeholder={attribute} />
+                <Form.Control type={attribute} placeholder={attribute} ref={attribute} />
             </Form.Group>
         );
 
