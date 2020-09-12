@@ -12,6 +12,10 @@ td, th {
     text-align: left;
 }
 
+.navbar {
+    position: static;
+}
+
 /* Classes for creating dialogs*/
 
 .modalDialog {
