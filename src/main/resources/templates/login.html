@@ -31,8 +31,8 @@
         <div class="align-self-center">
             <form class="form-signin" method="POST" action="/login">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                <div th:if="${param.error}" class="alert alert-error text-center">
-                    Invalid username and password
+                <div th:if="${param.error}" class="alert alert-danger text-center" role="alert">
+                    <strong>Invalid username and password</strong>
                 </div>
                 <h2 class="form-signin-heading text-center mb-5">Sign In</h2>
                 <p>
