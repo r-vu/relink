@@ -36,7 +36,7 @@
             <form class="shortURLInputForm text-center" action="#" th:action="@{/}" th:object="${shortURLFormData}" method="POST">
                 <h1 class="h1 mb-1">Relink</h1>
                 <h2 class="font-weight-normal">A URL Shortener!</h2>
-                <input class="form-input" autofocus size=40 type="text" placeholder="Enter a URL here" th:field="*{dest}"/>
+                <input class="form-control my-4" autofocus size=40 type="text" required placeholder="Enter a URL here" th:field="*{dest}"/>
                 <input class="btn btn-lg btn-primary btn-block" type="submit" value="Relink!"/>
             </form>
 
