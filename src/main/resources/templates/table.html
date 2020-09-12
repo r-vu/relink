@@ -6,9 +6,26 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="/table.css" />
 </head>
+
 <body>
 
-    <div id="react"></div>
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+        <a class="navbar-brand" href="/">Relink</a>
+        <div class="navbar-nav mr-auto">
+            <div class="d-flex flex-row" sec:authorize="!isAuthenticated()">
+                <a class="nav-link" href="/login">Login</a>
+            </div>
+
+            <div class="d-flex flex-row" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/logout">Logout</a>
+                <a class="nav-link" href="/table">Table</a>
+            </div>
+
+        </div>
+    </nav>
+
+    <div id="react" class="container-fluid"></div>
+    <!-- <div id="react"></div> -->
 
     <script src="built/app.bundle.js"></script>
 
