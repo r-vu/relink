@@ -5,6 +5,7 @@ import ReactDOM from "react-dom";
 import client from "./client";
 
 import Table from "react-bootstrap/Table";
+import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 
 const root = "/api";
 
@@ -25,16 +26,18 @@ class App extends React.Component {
 
     render() {
         return (
-            <div>
-                <CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/>
-                <ShortURLList 
-                    shortURLs={this.state.shortURLs}
-                    links={this.state.links}
-                    pageSize={this.state.pageSize}
-                    onNavigate={this.onNavigate}
-                    onDelete={this.onDelete}
-                    updatePageSize={this.updatePageSize}/>
-            </div>
+            <Row className="justify-content-center">
+                <Col lg={6} className="mt-3">
+                    <CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/>
+                    <ShortURLList
+                        shortURLs={this.state.shortURLs}
+                        links={this.state.links}
+                        pageSize={this.state.pageSize}
+                        onNavigate={this.onNavigate}
+                        onDelete={this.onDelete}
+                        updatePageSize={this.updatePageSize}/>
+                </Col>
+            </Row>
         )
     }
 
@@ -173,11 +176,12 @@ class ShortURLList extends React.Component {
         return (
             <div>
                 <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
-                <Table>
-                    <thead>
+                <Table striped bordered hover>
+                    <thead className="thead-dark">
                         <tr>
                             <th>Name</th>
                             <th>Destination</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -220,6 +224,19 @@ class CreateDialog extends React.Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.openDialog = this.openDialog.bind(this);
+        this.closeDialog = this.closeDialog.bind(this);
+
+        this.state = {showDialog: false};
+    }
+
+    openDialog() {
+        this.setState({showDialog: true});
+    }
+
+    closeDialog() {
+        this.setState({showDialog: false});
     }
 
     handleSubmit(e) {
@@ -239,16 +256,35 @@ class CreateDialog extends React.Component {
     }
 
     render() {
+
         let inputs = this.props.attributes.map(attribute =>
-            <p key={attribute}>
-                <input type="text" placeholder={attribute} ref={attribute} className="field"/>
-            </p>
+            // <p key={attribute}>
+            //     <input type="text" placeholder={attribute} ref={attribute} className="field"/>
+            // </p>
+            <Form.Group key={attribute} controlId={"createForm_".concat(attribute)}>
+                <Form.Label>{attribute}</Form.Label>
+                <Form.Control type={attribute} placeholder={attribute} />
+            </Form.Group>
         );
 
         return (
-            <div>
-                <a href="#createshorturl">Create</a>
-                <div id="createshorturl" className="modalDialog">
+            <>
+            <Button href="#create" variant="primary" onClick={this.openDialog}>
+                Create
+            </Button>
+            <Modal show={this.state.showDialog} onHide={this.closeDialog}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Shorten a new URL</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        {inputs}
+                    </Form>
+                    <Button variant="primary" type="submit" onClick={this.handleSubmit}>
+                        Submit
+                    </Button>
+                </Modal.Body>
+                {/* <div id="create" className="modalDialog">
                     <div>
                         <a href="#" title="Close" className="close">X</a>
                         <h2>Create new ShortURL</h2>
@@ -257,8 +293,9 @@ class CreateDialog extends React.Component {
                             <button onClick={this.handleSubmit}>Create</button>
                         </form>
                     </div>
-                </div>
-            </div>
+                </div> */}
+            </Modal>
+            </>
         )
     }
 }
