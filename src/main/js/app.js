@@ -10,7 +10,7 @@ import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 const root = "/api";
 
 class App extends React.Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {shortURLs: [], attributes: [], pageSize: 2, links: []};
@@ -129,7 +129,7 @@ class ShortURLList extends React.Component {
         if (/^[0-9]+$/.test(pageSize)) {
             this.props.updatePageSize(pageSize);
         } else {
-            ReactDOM.findDOMNode(this.refs.pageSize).value = 
+            ReactDOM.findDOMNode(this.refs.pageSize).value =
             pageSize.substring(0, pageSize.length - 1);
         }
     }
@@ -197,7 +197,7 @@ class ShortURLList extends React.Component {
 }
 
 class ShortURL extends React.Component {
-    
+
     constructor(props) {
         super(props);
         this.handleDelete = this.handleDelete.bind(this);
@@ -208,10 +208,17 @@ class ShortURL extends React.Component {
     }
 
     render() {
+
+        let shortURLProps = Object.keys(this.props.shortURL);
+        shortURLProps.pop();
+        shortURLProps = shortURLProps.map(prop =>
+            <td key={prop}>{this.props.shortURL[prop]}</td>
+        )
+
+
         return (
             <tr>
-                <td>{this.props.shortURL.name}</td>
-                <td>{this.props.shortURL.dest}</td>
+                {shortURLProps}
                 <td>
                     <button onClick={this.handleDelete}>Delete</button>
                 </td>
