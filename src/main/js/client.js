@@ -15,7 +15,7 @@ registry.register("text/uri-list", require("./api/uriListConverter"));
 registry.register("application/hal+json", require("rest/mime/type/application/hal"));
 
 module.exports = rest
-        .wrap(pathPrefix, {prefix: "http://localhost:8080/api"})
+        .wrap(pathPrefix, {prefix: "/api"})
         .wrap(template, {template: "shortURLs{?size}", size: 20})
         .wrap(mime, { registry: registry })
         // .wrap(uriTemplateInterceptor)
