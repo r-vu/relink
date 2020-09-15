@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 import client from "./client";
 
 import Table from "react-bootstrap/Table";
-import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, FormControl, InputGroup, Modal, Row } from "react-bootstrap";
 
 const root = "/api";
 
@@ -13,7 +13,7 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {shortURLs: [], attributes: [], pageSize: 2, links: []};
+        this.state = {shortURLs: [], attributes: [], pageSize: 5, links: []};
         this.onCreate = this.onCreate.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
@@ -175,7 +175,13 @@ class ShortURLList extends React.Component {
 
         return (
             <div>
-                <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
+                {/* <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/> */}
+                <InputGroup>
+                    <InputGroup.Prepend>
+                        <InputGroup.Text>Maximum Table Size</InputGroup.Text>
+                    </InputGroup.Prepend>
+                    <FormControl ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput} />
+                </InputGroup>
                 <Table striped bordered hover>
                     <thead className="thead-dark">
                         <tr>
