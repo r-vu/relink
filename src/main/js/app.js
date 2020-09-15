@@ -226,9 +226,9 @@ class ShortURL extends React.Component {
 
         return (
             <tr>
-                <td>{this.props.shortURL["Name"]}</td>
-                <td>{this.props.shortURL["Destination"]}</td>
-                <td>{this.props.shortURL["Use Count"]}</td>
+                <td>{this.props.shortURL["name"]}</td>
+                <td>{this.props.shortURL["destination"]}</td>
+                <td>{this.props.shortURL["useCount"]}</td>
                 {/* {shortURLProps} */}
                 <td>
                     <button onClick={this.handleDelete}>Delete</button>

@@ -24,18 +24,18 @@ public class ShortURL {
     @GeneratedValue
     private Long id;
 
-    @JsonProperty("Name")
+    @JsonProperty("name")
     private String name;
 
     @Column(columnDefinition = "TEXT")
-    @JsonProperty("Destination")
+    @JsonProperty("destination")
     private String dest; // destination
 
     @ManyToOne
-    @JsonProperty("Owner")
+    @JsonProperty("owner")
     private RelinkUser owner;
 
-    @JsonProperty("Use Count")
+    @JsonProperty("useCount")
     private int useCount;
 
     private ShortURL() {}
