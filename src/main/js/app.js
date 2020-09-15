@@ -236,7 +236,8 @@ class ShortURL extends React.Component {
                 <td>{this.props.shortURL["useCount"]}</td>
                 {/* {shortURLProps} */}
                 <td>
-                    <button onClick={this.handleDelete}>Delete</button>
+                    <Button variant="warning" size="sm">Edit</Button>{" "}
+                    <Button variant="danger" size="sm" onClick={this.handleDelete}>Delete</Button>
                 </td>
             </tr>
         )
@@ -298,7 +299,7 @@ class CreateDialog extends React.Component {
 
         return (
             <>
-            <Button href="#create" variant="primary" onClick={this.openDialog}>
+            <Button size="sm" href="#create" variant="primary" onClick={this.openDialog}>
                 Create
             </Button>
             <Modal show={this.state.showDialog} onHide={this.closeDialog}>
