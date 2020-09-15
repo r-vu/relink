@@ -28,13 +28,15 @@ class App extends React.Component {
         return (
             <Row className="justify-content-center">
                 <Col lg={6} className="mt-3">
-                    <CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/>
+                    {/* <CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/> */}
                     <ShortURLList
                         shortURLs={this.state.shortURLs}
                         links={this.state.links}
                         pageSize={this.state.pageSize}
                         onNavigate={this.onNavigate}
                         onDelete={this.onDelete}
+                        onCreate={this.onCreate}
+                        attributes={this.state.attributes}
                         updatePageSize={this.updatePageSize}/>
                 </Col>
             </Row>
@@ -159,6 +161,8 @@ class ShortURLList extends React.Component {
                 <ShortURL key={shortURL._links.self.href} shortURL={shortURL} onDelete={this.props.onDelete}/>
         );
 
+        let dummyShortURL = <DummyShortURL />
+
         let navLinks = [];
         if ("first" in this.props.links) {
             navLinks.push(<button key="first" onClick={this.handleNavFirst}>First</button>)
@@ -193,6 +197,7 @@ class ShortURLList extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
+                        <DummyShortURL attributes={this.props.attributes} onCreate={this.props.onCreate} />
                         {shortURLs}
                     </tbody>
                 </Table>
@@ -261,15 +266,20 @@ class CreateDialog extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         let newShortURL = {};
-        this.props.attributes.forEach(attribute => {
-            newShortURL[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
-        });
+        // this.props.attributes.forEach(attribute => {
+        //     newShortURL[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
+        // });
+        newShortURL["name"] = ReactDOM.findDOMNode(this.refs["name"]).value.trim();
+        newShortURL["destination"] = ReactDOM.findDOMNode(this.refs["destination"]).value.trim();
 
         this.props.onCreate(newShortURL);
 
-        this.props.attributes.forEach(attribute => {
-            ReactDOM.findDOMNode(this.refs[attribute]).value = "";
-        });
+        // this.props.attributes.forEach(attribute => {
+        //     ReactDOM.findDOMNode(this.refs[attribute]).value = "";
+        // });
+
+        ReactDOM.findDOMNode(this.refs["name"]).value = "";
+        ReactDOM.findDOMNode(this.refs["destination"]).value = "";
 
         window.location = "#";
     }
@@ -297,7 +307,15 @@ class CreateDialog extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        {inputs}
+                        <Form.Group controlId="destination">
+                            <Form.Label>Destination</Form.Label>
+                            <Form.Control ref="destination" type="destination"></Form.Control>
+                        </Form.Group>
+
+                        <Form.Group controlId="name">
+                            <Form.Label>Shortened Name</Form.Label>
+                            <Form.Control ref="name" type="name" placeholder="(leave blank for autogeneration)"></Form.Control>
+                        </Form.Group>
                     </Form>
                     <Button variant="primary" type="submit" onClick={this.handleSubmit}>
                         Submit
@@ -315,6 +333,27 @@ class CreateDialog extends React.Component {
                 </div> */}
             </Modal>
             </>
+        )
+    }
+}
+
+class DummyShortURL extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+    }
+
+    render() {
+        return (
+            <tr>
+                <td>--</td>
+                <td>--</td>
+                <td>--</td>
+                <td>
+                    <CreateDialog attributes={this.props.attributes} onCreate={this.props.onCreate}/>
+                </td>
+            </tr>
         )
     }
 }
