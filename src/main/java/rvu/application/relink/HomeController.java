@@ -71,6 +71,8 @@ public class HomeController {
         if (shortURL == null) {
             return "redirect:/table";
         } else {
+            shortURL.incrementUseCount();
+            shortURLRepo.save(shortURL);
             return "redirect:".concat(shortURL.getDest());
         }
     }
