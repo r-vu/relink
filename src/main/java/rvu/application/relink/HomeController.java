@@ -43,6 +43,22 @@ public class HomeController {
         return "login";
     }
 
+    @GetMapping(value = "/signup")
+    public String signupPage(Model model) {
+        model.addAttribute("newUser", new RelinkUser());
+        return "signup";
+    }
+
+    @PostMapping(value = "/signup")
+    public String signup(@ModelAttribute(name = "newUser") RelinkUser newUser, Model model) {
+        if (relinkUserRepo.findByName(newUser.getName()) == null) {
+            relinkUserRepo.save(newUser);
+            return "redirect:/login";
+        } else {
+            return "error";
+        }
+    }
+
 
     @GetMapping(value = "/table")
     public String table() {
