@@ -181,6 +181,8 @@ class ShortURLList extends React.Component {
                         <tr>
                             <th>Name</th>
                             <th>Destination</th>
+                            <th>Use Count</th>
+                            {/* <th>Owner</th> */}
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -209,16 +211,19 @@ class ShortURL extends React.Component {
 
     render() {
 
-        let shortURLProps = Object.keys(this.props.shortURL);
-        shortURLProps.pop();
-        shortURLProps = shortURLProps.map(prop =>
-            <td key={prop}>{this.props.shortURL[prop]}</td>
-        )
+        // let shortURLProps = Object.keys(this.props.shortURL.content);
+        // // shortURLProps.pop();
+        // shortURLProps = shortURLProps.map(prop =>
+        //     <td key={prop}>{this.props.shortURL.content[prop]}</td>
+        // )
 
 
         return (
             <tr>
-                {shortURLProps}
+                <td>{this.props.shortURL["Name"]}</td>
+                <td>{this.props.shortURL["Destination"]}</td>
+                <td>{this.props.shortURL["Use Count"]}</td>
+                {/* {shortURLProps} */}
                 <td>
                     <button onClick={this.handleDelete}>Delete</button>
                 </td>
