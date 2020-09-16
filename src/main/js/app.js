@@ -36,6 +36,7 @@ class App extends React.Component {
                         onNavigate={this.onNavigate}
                         onDelete={this.onDelete}
                         onCreate={this.onCreate}
+                        onUpdate={this.onUpdate}
                         attributes={this.state.attributes}
                         updatePageSize={this.updatePageSize}/>
                 </Col>
@@ -107,6 +108,17 @@ class App extends React.Component {
         });
     }
 
+    onUpdate(shortURL, updateShortURL) {
+        client({
+            method: "PUT",
+            path: shortURL._links.self.href,
+            entity: updateShortURL,
+            headers: {"Content-Type": "application/json"}
+        }).then(response => {
+            this.loadFromDatabase(this.state.pageSize);
+        })
+    }
+
     updatePageSize(pageSize) {
         if (pageSize !== this.state.pageSize) {
             this.loadFromDatabase(pageSize);
@@ -158,7 +170,7 @@ class ShortURLList extends React.Component {
 
     render() {
         let shortURLs = this.props.shortURLs.map(shortURL =>
-                <ShortURL key={shortURL._links.self.href} shortURL={shortURL} onDelete={this.props.onDelete}/>
+                <ShortURL key={shortURL._links.self.href} shortURL={shortURL} onDelete={this.props.onDelete} onUpdate={this.props.onUpdate} />
         );
 
         let dummyShortURL = <DummyShortURL />
@@ -236,7 +248,8 @@ class ShortURL extends React.Component {
                 <td>{this.props.shortURL["useCount"]}</td>
                 {/* {shortURLProps} */}
                 <td>
-                    <Button variant="warning" size="sm">Edit</Button>{" "}
+                    {/* <Button variant="warning" size="sm" shortURL={this.props.shortURL} onUpdate={this.props.onUpdate}>Edit</Button>{" "} */}
+                    <UpdateDialog shortURL={this.props.shortURL} onUpdate={this.props.onUpdate}>Edit</UpdateDialog> {" "}
                     <Button variant="danger" size="sm" onClick={this.handleDelete}>Delete</Button>
                 </td>
             </tr>
@@ -355,6 +368,70 @@ class DummyShortURL extends React.Component {
                     <CreateDialog attributes={this.props.attributes} onCreate={this.props.onCreate}/>
                 </td>
             </tr>
+        )
+    }
+}
+
+class UpdateDialog extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.openDialog = this.openDialog.bind(this);
+        this.closeDialog = this.closeDialog.bind(this);
+        this.state = {
+            showDialog: false
+        }
+    }
+
+    openDialog() {
+        this.setState({showDialog: true});
+    }
+
+    closeDialog() {
+        this.setState({showDialog: false});
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        let updateShortURL = {};
+
+        updateShortURL["name"] = ReactDOM.findDOMNode(this.refs["name"]).value.trim();
+        updateShortURL["destination"] = ReactDOM.findDOMNode(this.refs["destination"]).value.trim();
+
+        this.props.onUpdate(this.props.shortURL, updateShortURL);
+        this.closeDialog();
+    }
+
+    render() {
+
+        return (
+            <>
+            <Button size="sm" variant="warning" onClick={this.openDialog}>
+                Edit
+            </Button>
+            <Modal show={this.state.showDialog} onHide={this.closeDialog}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit a Shortened URL</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="destination">
+                            <Form.Label>Destination</Form.Label>
+                            <Form.Control ref="destination" type="destination" defaultValue={this.props.shortURL["destination"]}></Form.Control>
+                        </Form.Group>
+
+                        <Form.Group controlId="name">
+                            <Form.Label>Shortened Name</Form.Label>
+                            <Form.Control ref="name" type="name" defaultValue={this.props.shortURL["name"]}></Form.Control>
+                        </Form.Group>
+                    </Form>
+                    <Button variant="primary" type="submit" onClick={this.handleSubmit}>
+                        Submit
+                    </Button>
+                </Modal.Body>
+            </Modal>
+            </>
         )
     }
 }
