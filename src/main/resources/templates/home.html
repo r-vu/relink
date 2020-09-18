@@ -40,6 +40,10 @@
                 <input class="btn btn-lg btn-primary btn-block" type="submit" value="Relink!"/>
             </form>
 
+            <div th:if="${invalidURL}" class="alert alert-danger text-center" role="alert">
+                <strong>Invalid URL entered</strong>
+            </div>
+
             <div class="d-flex justify-content-center">
                 <footer class="footer mb-auto py-3">
                     <a href="https://www.github.com/r-vu/relink" class="text-info">Source Code &amp; Documentation</a>

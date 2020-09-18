@@ -1,6 +1,8 @@
 package rvu.application.relink;
 
 import java.security.Principal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +31,15 @@ public class HomeController {
     @PostMapping(value = "/")
     public String createShortURL(@ModelAttribute ShortURLFormData shortURLFormData, Model model) {
         try {
+            Pattern checkURL = Pattern.compile(
+                "(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})"
+            );
+            Matcher matchURL = checkURL.matcher(shortURLFormData.getDest());
+            if (!matchURL.matches()) {
+                model.addAttribute("invalidURL", true);
+                System.out.printf("An invalid URL was entered: %s \n", shortURLFormData.getDest());
+                return "home";
+            }
             ShortURL shortURL = shortURLFormData.toShortURL();
             shortURLRepo.save(shortURL);
             model.addAttribute("shortURLData", shortURL);
