@@ -41,6 +41,11 @@ public class HomeController {
                 return "home";
             }
             ShortURL shortURL = shortURLFormData.toShortURL();
+            String dest = shortURL.getDest();
+            if (!dest.startsWith("http")) {
+                dest = "https://".concat(dest);
+                shortURL.setDest(dest);
+            }
             shortURLRepo.save(shortURL);
             model.addAttribute("shortURLData", shortURL);
         } catch (Exception e) {
