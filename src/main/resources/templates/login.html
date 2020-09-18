@@ -6,7 +6,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="/login.css"/>
-    <title>Relink: Home</title>
+    <title>Relink: Login</title>
 
 </head>
 
@@ -30,9 +30,11 @@
     <div class="container d-flex justify-content-center">
         <div class="align-self-center">
             <form class="form-signin" method="POST" action="/login">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 <div th:if="${param.error}" class="alert alert-danger text-center" role="alert">
                     <strong>Invalid username and password</strong>
+                </div>
+                <div th:if="${createSuccess}" class="alert alert-success text-center" role="alert">
+                    <strong>Account successfully created!</strong>
                 </div>
                 <h2 class="form-signin-heading text-center mb-5">Sign In</h2>
                 <p>
@@ -45,6 +47,12 @@
                 </p>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
             </form>
+
+            <div class="d-flex justify-content-center">
+                <footer class="footer mb-auto py-3">
+                    <a href="/signup" class="text-info">Create an Account</a>
+                </footer>
+            </div>
         </div>
     </div>
 </body>

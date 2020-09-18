@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class HomeController {
@@ -21,7 +22,7 @@ public class HomeController {
 
     @Autowired
     private RelinkUserRepository relinkUserRepo;
-    
+
     @GetMapping(value = "/")
     public String home(Model model) {
         model.addAttribute("shortURLFormData", new ShortURLFormData());
@@ -66,9 +67,12 @@ public class HomeController {
     }
 
     @PostMapping(value = "/signup")
-    public String signup(@ModelAttribute(name = "newUser") RelinkUser newUser, Model model) {
+    public String signup(@ModelAttribute(name = "newUser") RelinkUser newUser, Model model,
+        RedirectAttributes rAttributes) {
+
         if (relinkUserRepo.findByName(newUser.getName()) == null) {
             relinkUserRepo.save(newUser);
+            rAttributes.addFlashAttribute("createSuccess", true);
             return "redirect:/login";
         } else {
             return "error";
