@@ -32,7 +32,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .cors()
             .and().authorizeRequests()
                 .antMatchers(
-                    "/",
+                    "/signup",
+                    "/to/**",
                     "/built/**",
                     "/*.css"
                 ).permitAll()
