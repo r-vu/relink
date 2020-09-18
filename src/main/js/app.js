@@ -227,10 +227,15 @@ class ShortURL extends React.Component {
     constructor(props) {
         super(props);
         this.handleDelete = this.handleDelete.bind(this);
+        this.copyToClipboard = this.copyToClipboard.bind(this);
     }
 
     handleDelete() {
         this.props.onDelete(this.props.shortURL);
+    }
+
+    copyToClipboard() {
+        navigator.clipboard.writeText(window.location.hostname + "/to/" + this.props.shortURL["name"]);
     }
 
     render() {
@@ -250,6 +255,7 @@ class ShortURL extends React.Component {
                 {/* {shortURLProps} */}
                 <td>
                     {/* <Button variant="warning" size="sm" shortURL={this.props.shortURL} onUpdate={this.props.onUpdate}>Edit</Button>{" "} */}
+                    <Button variant="success" size="sm" onClick={this.copyToClipboard}>Copy</Button> {" "}
                     <UpdateDialog shortURL={this.props.shortURL} onUpdate={this.props.onUpdate}>Edit</UpdateDialog> {" "}
                     <Button variant="danger" size="sm" onClick={this.handleDelete}>Delete</Button>
                 </td>
