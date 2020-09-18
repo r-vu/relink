@@ -17,6 +17,7 @@ class App extends React.Component {
         this.onCreate = this.onCreate.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
+        this.onUpdate = this.onUpdate.bind(this);
         this.updatePageSize = this.updatePageSize.bind(this);
     }
 
@@ -116,7 +117,7 @@ class App extends React.Component {
             headers: {"Content-Type": "application/json"}
         }).then(response => {
             this.loadFromDatabase(this.state.pageSize);
-        })
+        });
     }
 
     updatePageSize(pageSize) {
