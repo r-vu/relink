@@ -302,20 +302,21 @@ class CreateDialog extends React.Component {
         ReactDOM.findDOMNode(this.refs["name"]).value = "";
         ReactDOM.findDOMNode(this.refs["destination"]).value = "";
 
+        this.closeDialog();
         window.location = "#";
     }
 
     render() {
 
-        let inputs = this.props.attributes.map(attribute =>
-            // <p key={attribute}>
-            //     <input type="text" placeholder={attribute} ref={attribute} className="field"/>
-            // </p>
-            <Form.Group key={attribute} controlId={"createForm_".concat(attribute)}>
-                <Form.Label>{attribute}</Form.Label>
-                <Form.Control type={attribute} placeholder={attribute} ref={attribute} />
-            </Form.Group>
-        );
+        // let inputs = this.props.attributes.map(attribute =>
+        //     // <p key={attribute}>
+        //     //     <input type="text" placeholder={attribute} ref={attribute} className="field"/>
+        //     // </p>
+        //     <Form.Group key={attribute} controlId={"createForm_".concat(attribute)}>
+        //         <Form.Label>{attribute}</Form.Label>
+        //         <Form.Control type={attribute} placeholder={attribute} ref={attribute} />
+        //     </Form.Group>
+        // );
 
         return (
             <>
