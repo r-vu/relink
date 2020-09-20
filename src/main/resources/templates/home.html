@@ -24,12 +24,17 @@
             </div>
 
             <div class="d-flex flex-row" sec:authorize="isAuthenticated()">
-                <a class="nav-link" href="/logout">Logout</a>
+                <a class="nav-link" href="javascript: document.logoutForm.submit()">Logout</a>
                 <a class="nav-link" href="/table">Table</a>
+
             </div>
 
         </div>
     </nav>
+
+    <form name="logoutForm" th:action="@{/logout}" method="POST" hidden="true">
+        <input hidden type="submit" value="Sign Out"/>
+    </form>
 
     <div class="container d-flex justify-content-center">
         <div class="align-self-center">
