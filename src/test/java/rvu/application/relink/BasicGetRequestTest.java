@@ -20,6 +20,7 @@ public class BasicGetRequestTest {
 
     // Uncomment .andDo(print()) if you want output to be
     // seen in the console
+    // from MockMvcResultHandlers
 
     @Test
     public void getHome() throws Exception {
