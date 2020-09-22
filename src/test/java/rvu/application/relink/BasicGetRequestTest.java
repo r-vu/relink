@@ -3,6 +3,7 @@ package rvu.application.relink;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -43,19 +44,25 @@ public class BasicGetRequestTest {
             .andExpect(content().string(containsString("signup.css")));
     }
 
+    // The reason why patterns are required here are because
+    // the redirects are caused by the security policy, which
+    // seems to put full fledged URLs for redirects instead of
+    // relative ones as defined in HomeController
+
     // Should redirect to login without auth
     @Test
     public void getTable() throws Exception {
-        this.mockMvc.perform(get("/table"))//.andDo(print())
-            .andExpect(status().is3xxRedirection());
+        this.mockMvc.perform(get("/table"))//.andDo(MockMvcResultHandlers.print())
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrlPattern("**/login"));
     }
 
     // Should redirect to home directly
     @Test
     public void getLogout() throws Exception {
-        this.mockMvc.perform(get("/logout"))//.andDo(print())
-            .andExpect(status().is3xxRedirection());
+        this.mockMvc.perform(get("/logout"))//.andDo(MockMvcResultHandlers.print())
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrlPattern("**/"));
     }
-
 
 }
