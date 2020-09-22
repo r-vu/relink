@@ -1,11 +1,14 @@
 package rvu.application.relink;
 
 import java.util.Random;
-import java.lang.StringBuilder;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class TestUtils {
 
     private static final Random rng = new Random();
+    private static final ObjectMapper objMapper = new ObjectMapper();
 
     private static final String[] PROTOCOLS = {
         "http://",
@@ -24,14 +27,14 @@ public class TestUtils {
         ".ca"
     };
 
-    protected static ShortURL randomShortURL() {
+    static ShortURL randomShortURL() {
         return new ShortURL(randomAlphabeticalString(5), randomURL());
     }
 
-    protected static String randomURL() {
+    static String randomURL() {
         String protocol = PROTOCOLS[rng.nextInt(PROTOCOLS.length)];
-        String subdomain = randomAlphabeticalString(rng.nextInt(5) + 2);
-        String host = randomAlphabeticalString(rng.nextInt(5) + 4);
+        String subdomain = randomAlphabeticalString(3, 10);
+        String host = randomAlphabeticalString(3, 10);
         String tld = TLDS[rng.nextInt(TLDS.length)];
 
         StringBuilder out = new StringBuilder(protocol);
@@ -44,10 +47,26 @@ public class TestUtils {
         return out.toString();
     }
 
-    protected static String randomAlphabeticalString(int length) {
+    static String randomAlphabeticalString(int minLength, int maxLength) {
+        return randomAlphabeticalString(randomInt(minLength, maxLength));
+    }
+
+    static String randomAlphabeticalString(int length) {
         return rng.ints(length, "a".codePointAt(0), "z".codePointAt(0)).collect(
             StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
             .toString();
+    }
+
+    static String toJson(Object obj) throws JsonProcessingException {
+        return objMapper.writeValueAsString(obj);
+    }
+
+    /**
+     * Inclusive of both lower and upper bounds
+     */
+    static int randomInt(int lowerBound, int upperBound) {
+        upperBound++;
+        return (int) (rng.nextDouble() * (upperBound - lowerBound) + lowerBound);
     }
     
 }

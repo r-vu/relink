@@ -5,11 +5,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static rvu.application.relink.TestUtils.randomShortURL;
+import static rvu.application.relink.TestUtils.toJson;
 
 import javax.servlet.Filter;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+// import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -50,37 +48,40 @@ public class AuthorizationAndCSRFTest {
             .addFilters(springSecurityFilterChain).build();
     }
 
-
-    private String createShortURL() throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(randomShortURL());
-    }
-
     private RequestPostProcessor userInfo() {
-        return user("user").password("password").roles("USER");
+        return user("user")
+            .password("password")
+            .roles("USER");
     }
 
     @Test
     public void noCSRFRequest() throws Exception {
         mockMvc.perform(
-            post("/api/shortURLs").contentType(MediaType.APPLICATION_JSON).content(
-                createShortURL()).with(userInfo())).andExpect(
-                status().isForbidden());
+            post("/api/shortURLs")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(toJson(randomShortURL()))
+            .with(userInfo()))
+            .andExpect(status().isForbidden());
     }
 
     @Test
     public void withCSRFRequest() throws Exception {
         mockMvc.perform(
-            post("/api/shortURLs").contentType(MediaType.APPLICATION_JSON).content(
-                createShortURL()).with(userInfo()).with(csrf())).andExpect(
-                status().isCreated());
+            post("/api/shortURLs")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(toJson(randomShortURL()))
+            .with(userInfo())
+            .with(csrf()))
+            .andExpect(status().isCreated());
     }
 
     @Test
     public void noAuthRequest() throws Exception {
         mockMvc.perform(
-            post("/api/shortURLs").contentType(MediaType.APPLICATION_JSON).content(
-                createShortURL())).andExpect(
-                status().isForbidden());
+            post("/api/shortURLs")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(toJson(randomShortURL())))
+            .andExpect(status().isForbidden());
     }
 
 }
