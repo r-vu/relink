@@ -1,17 +1,14 @@
 package rvu.application.relink;
 
-import java.security.Principal;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -32,23 +29,25 @@ public class HomeController {
     @PostMapping(value = "/")
     public String createShortURL(@ModelAttribute ShortURLFormData shortURLFormData, Model model) {
         try {
-            Pattern checkURL = Pattern.compile(
-                "(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})"
-            );
-            Matcher matchURL = checkURL.matcher(shortURLFormData.getDest());
-            if (!matchURL.matches()) {
+
+            String dest = shortURLFormData.getDest();
+            if (!dest.toLowerCase().startsWith("http")) {
+                dest = "https://".concat(dest);
+            }
+
+            String[] schemes = {"http", "https"};
+            UrlValidator validator = new UrlValidator(schemes);
+            if (!validator.isValid(dest)) {
                 model.addAttribute("invalidURL", true);
-                System.out.printf("An invalid URL was entered: %s \n", shortURLFormData.getDest());
+                // System.out.printf("An invalid URL was entered: %s \n", dest);
                 return "home";
             }
+
             ShortURL shortURL = shortURLFormData.toShortURL();
-            String dest = shortURL.getDest();
-            if (!dest.startsWith("http")) {
-                dest = "https://".concat(dest);
-                shortURL.setDest(dest);
-            }
+            shortURL.setDest(dest);
             shortURLRepo.save(shortURL);
             model.addAttribute("shortURLData", shortURL);
+
         } catch (Exception e) {
             model.addAttribute("exceptionInfo", e.getMessage());
         }

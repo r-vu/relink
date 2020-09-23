@@ -71,6 +71,12 @@
 			<artifactId>spring-security-test</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.7</version>
+		</dependency>
+
 		<!-- Hotswap Tool -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
