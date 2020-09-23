@@ -42,7 +42,7 @@ public class TestUtils {
         out.append(".");
         out.append(host);
         out.append(tld);
-        out.append("TESTDATA");
+        out.append("/TESTDATA");
 
         return out.toString();
     }
