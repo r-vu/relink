@@ -235,7 +235,7 @@ class ShortURL extends React.Component {
     }
 
     copyToClipboard() {
-        navigator.clipboard.writeText(window.location.hostname + "/to/" + this.props.shortURL["name"]);
+        navigator.clipboard.writeText(window.location.host + "/to/" + this.props.shortURL["name"]);
     }
 
     render() {

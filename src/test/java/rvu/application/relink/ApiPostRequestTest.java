@@ -29,7 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureTestDatabase(replace = Replace.AUTO_CONFIGURED, connection = EmbeddedDatabaseConnection.H2)
 @WebAppConfiguration
 @AutoConfigureMockMvc
-public class AuthorizationAndCSRFTest {
+public class ApiPostRequestTest {
 
     // .andDo(MockMvcResultHandlers.print())
     
