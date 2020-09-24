@@ -70,6 +70,7 @@ public class HomeController {
         RedirectAttributes rAttributes) {
 
         if (relinkUserRepo.findByName(newUser.getName()) == null) {
+            newUser.setRoles(new String[] {"ROLE_USER"});
             relinkUserRepo.save(newUser);
             rAttributes.addFlashAttribute("createSuccess", true);
             return "redirect:/login";

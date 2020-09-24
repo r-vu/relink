@@ -26,14 +26,17 @@ public class RelinkUser {
 
     private String name;
 
+    private String[] roles;
+
     @JsonIgnore
     private String password;
 
     protected RelinkUser() {}
 
-    public RelinkUser(String name, String password) {
+    public RelinkUser(String name, String password, String... roles) {
         this.name = name;
         this.setPassword(password);
+        this.roles = roles;
     }
     
     public Long getId() {
@@ -48,12 +51,20 @@ public class RelinkUser {
         return password;
     }
 
+    public String[] getRoles() {
+        return roles;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
     public void setPassword(String password) {
         this.password = PASSWORD_HASHER.encode(password);
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = roles;
     }
 
     @Override
