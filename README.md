@@ -42,3 +42,30 @@ By default, a site user account with username **`admin`** and password **`passwo
 - Page templating handled using Thymeleaf
 - User interface designed using React and Bootstrap
 - Live site deployed using AWS EC2 & RDS
+
+## Challenges Met
+
+### The JPQL Null Value Skip Problem
+
+When first restricting ShortURLs to only be accessible by their owners, my original JPQL query worked without problem. Owners could only see ShortURLs they created and that was it.
+
+```Java
+"SELECT s FROM ShortURL s WHERE s.owner.name = ?#{authentication?.name}"
+```
+
+Next, I wanted to implement an override for accounts with admin privileges, allowing them to view all ShortURLs regardless of owner. Initially I tried this JPQL query:
+
+```Java
+"SELECT s FROM ShortURL s WHERE (1=?#{hasRole('ROLE_ADMIN') ? 1 : 0} " +
+"OR s.owner.name = ?#{authentication?.name})"
+```
+
+However, in this query, any ShortURLs with `null` for owner would be skipped and become unviewable, despite the other `OR` condition passing for admin accounts. To solve this, a `LEFT JOIN` must be used:
+
+```Java
+"SELECT s from ShortURL s " +
+"LEFT JOIN s.owner owner WHERE (1=?#{hasRole('ROLE_ADMIN') ? 1 : " +
+"0} OR (owner IS NOT NULL AND owner.name = ?#{authentication?.name}))"
+```
+
+Using this query, ShortURLs with `null` owners are considered correctly. An alternative approach could be to assign by default a dummy account to any ShortURL that is created anonymously, removing the possibility of `null` for an owner.
