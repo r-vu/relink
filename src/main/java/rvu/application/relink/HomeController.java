@@ -2,6 +2,8 @@ package rvu.application.relink;
 
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +20,7 @@ public class HomeController {
     private ShortURLRepository shortURLRepo;
 
     @Autowired
-    private RelinkUserRepository relinkUserRepo;
+    private RelinkUserRepository userRepo;
 
     @GetMapping(value = "/")
     public String home(Model model) {
@@ -39,12 +41,16 @@ public class HomeController {
             UrlValidator validator = new UrlValidator(schemes);
             if (!validator.isValid(dest)) {
                 model.addAttribute("invalidURL", true);
-                // System.out.printf("An invalid URL was entered: %s \n", dest);
                 return "home";
             }
 
             ShortURL shortURL = shortURLFormData.toShortURL();
             shortURL.setDest(dest);
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null) {
+                RelinkUser owner = userRepo.findByName(auth.getName());
+                shortURL.setOwner(owner);
+            }
             shortURLRepo.save(shortURL);
             model.addAttribute("shortURLData", shortURL);
 
@@ -69,9 +75,9 @@ public class HomeController {
     public String signup(@ModelAttribute(name = "newUser") RelinkUser newUser, Model model,
         RedirectAttributes rAttributes) {
 
-        if (relinkUserRepo.findByName(newUser.getName()) == null) {
+        if (userRepo.findByName(newUser.getName()) == null) {
             newUser.setRoles(new String[] {"ROLE_USER"});
-            relinkUserRepo.save(newUser);
+            userRepo.save(newUser);
             rAttributes.addFlashAttribute("createSuccess", true);
             return "redirect:/login";
         } else {
