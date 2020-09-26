@@ -27,11 +27,11 @@ public class TestUtils {
         ".ca"
     };
 
-    static ShortURL randomShortURL() {
+    public static ShortURL randomShortURL() {
         return new ShortURL(randomAlphabeticalString(5), randomURL());
     }
 
-    static String randomURL() {
+    public static String randomURL() {
         String protocol = PROTOCOLS[rng.nextInt(PROTOCOLS.length)];
         String subdomain = randomAlphabeticalString(3, 10);
         String host = randomAlphabeticalString(3, 10);
@@ -47,26 +47,26 @@ public class TestUtils {
         return out.toString();
     }
 
-    static String randomAlphabeticalString(int minLength, int maxLength) {
+    public static String randomAlphabeticalString(int minLength, int maxLength) {
         return randomAlphabeticalString(randomInt(minLength, maxLength));
     }
 
-    static String randomAlphabeticalString(int length) {
+    public static String randomAlphabeticalString(int length) {
         return rng.ints(length, "a".codePointAt(0), "z".codePointAt(0)).collect(
             StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
             .toString();
     }
 
-    static String toJson(Object obj) throws JsonProcessingException {
+    public static String toJson(Object obj) throws JsonProcessingException {
         return objMapper.writeValueAsString(obj);
     }
 
     /**
      * Inclusive of both lower and upper bounds
      */
-    static int randomInt(int lowerBound, int upperBound) {
+    public static int randomInt(int lowerBound, int upperBound) {
         upperBound++;
         return (int) (rng.nextDouble() * (upperBound - lowerBound) + lowerBound);
     }
-    
+
 }
