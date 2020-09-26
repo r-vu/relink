@@ -4,15 +4,48 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 import javax.servlet.Filter;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ *
+ * <p>
+ * The template class for any tests requiring interaction with the API. Has
+ * three mock users to choose from and autowired repositories to better simulate
+ * the real application.
+ *
+ * <p>
+ * By default the template is set to use an in-memory H2 database which will be
+ * deleted upon application termination. If the created test data needs to be
+ * saved for debugging, Comment the {@code @AutoConfigureTestDatabase}
+ * annotation in order to use the database connection you have set in
+ * application.properties or elsewhere.
+ *
+ * <p>
+ * Important Notes:
+ *
+ * <ul>
+ * <li>Despite an existing {@code TestInstance} annotation set to
+ * {@code Lifecycle.PER_CLASS}, it seems classes share the same instance of the
+ * repositories, so the user repository is cleaned with {@code breakdownAll()}.
+ *
+ */
 @WebAppConfiguration
+@TestInstance(Lifecycle.PER_CLASS)
+@AutoConfigureTestDatabase(replace = Replace.AUTO_CONFIGURED, connection = EmbeddedDatabaseConnection.H2)
 public class UserAndSecurityTestTemplate {
 
     @Autowired
@@ -21,32 +54,52 @@ public class UserAndSecurityTestTemplate {
     @Autowired
     private Filter springSecurityFilterChain;
 
-    protected MockMvc mockMvc;
+    @Autowired
+    private JpaUserDetailsService userDetailsService;
 
     protected static final String SHORTURL_API = "/api/shortURLs";
 
+    @Autowired
+    protected RelinkUserRepository userRepo;
+
+    @Autowired
+    protected ShortURLRepository shortURLRepo;
+
+    protected MockMvc mockMvc;
+
+    @BeforeAll
+    public void setupOnce() {
+        userRepo.save(new RelinkUser("testUserA", "passwordA", "ROLE_USER"));
+        userRepo.save(new RelinkUser("testUserB", "passwordB", "ROLE_USER"));
+        userRepo.save(new RelinkUser("testAdmin", "passwordAdmin", "ROLE_USER", "ROLE_ADMIN"));
+    }
+
     @BeforeEach
-    public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .addFilters(springSecurityFilterChain).build();
+    public void setupEach() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain)
+                .build();
+    }
+
+    @AfterEach
+    public void breakdownEach() {
+        shortURLRepo.deleteAll();
+    }
+
+    @AfterAll
+    public void breakdownAll() {
+        userRepo.deleteAll();
     }
 
     protected RequestPostProcessor userAInfo() {
-        return user("userA")
-            .password("password")
-            .roles("USER");
+        return user(userDetailsService.loadUserByUsername("testUserA"));
     }
 
     protected RequestPostProcessor userBInfo() {
-        return user("userB")
-            .password("password")
-            .roles("USER");
+        return user(userDetailsService.loadUserByUsername("testUserB"));
     }
 
     protected RequestPostProcessor adminInfo() {
-        return user("admin")
-            .password("password")
-            .roles("USER", "ADMIN");
+        return user(userDetailsService.loadUserByUsername("testAdmin"));
     }
 
 }

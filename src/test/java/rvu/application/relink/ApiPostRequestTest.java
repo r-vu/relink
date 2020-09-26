@@ -7,15 +7,11 @@ import static rvu.application.relink.TestUtils.randomShortURL;
 import static rvu.application.relink.TestUtils.toJson;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 // import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 @SpringBootTest
-@AutoConfigureTestDatabase(replace = Replace.AUTO_CONFIGURED, connection = EmbeddedDatabaseConnection.H2)
 public class ApiPostRequestTest extends UserAndSecurityTestTemplate {
 
     // .andDo(MockMvcResultHandlers.print())
