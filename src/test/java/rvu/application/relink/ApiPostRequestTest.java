@@ -4,6 +4,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static rvu.application.relink.TestUtils.randomShortURL;
+import static rvu.application.relink.TestUtils.randomURL;
 import static rvu.application.relink.TestUtils.toJson;
 
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class ApiPostRequestTest extends UserAndSecurityTestTemplate {
     @Test
     public void noCSRFRequest() throws Exception {
         mockMvc.perform(
-            post("/api/shortURLs")
+            post(SHORTURL_API)
             .contentType(MediaType.APPLICATION_JSON)
             .content(toJson(randomShortURL()))
             .with(userAInfo()))
@@ -29,7 +30,7 @@ public class ApiPostRequestTest extends UserAndSecurityTestTemplate {
     @Test
     public void withCSRFRequest() throws Exception {
         mockMvc.perform(
-            post("/api/shortURLs")
+            post(SHORTURL_API)
             .contentType(MediaType.APPLICATION_JSON)
             .content(toJson(randomShortURL()))
             .with(userAInfo())
@@ -40,7 +41,7 @@ public class ApiPostRequestTest extends UserAndSecurityTestTemplate {
     @Test
     public void noAuthRequest() throws Exception {
         mockMvc.perform(
-            post("/api/shortURLs")
+            post(SHORTURL_API)
             .contentType(MediaType.APPLICATION_JSON)
             .content(toJson(randomShortURL())))
             .andExpect(status().isForbidden());

@@ -1,6 +1,14 @@
 package rvu.application.relink;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static rvu.application.relink.TestUtils.randomShortURL;
+import static rvu.application.relink.TestUtils.toJson;
 
 import javax.servlet.Filter;
 
@@ -14,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
@@ -31,13 +40,16 @@ import org.springframework.web.context.WebApplicationContext;
  * By default the template is set to use an in-memory H2 database which will be
  * deleted upon application termination. If the created test data needs to be
  * saved for debugging, Comment the {@code @AutoConfigureTestDatabase}
- * annotation in order to use the database connection you have set in
- * application.properties or elsewhere.
+ * annotation, and the repository initialization methods {@code setupOnce()},
+ * {@code breakdownEach()}, {@code breakdownAll()} in order to use the database
+ * connection you have set in application.properties or elsewhere. The default
+ * account with username {@code admin} and password {@code password} should be
+ * created if it does not exist.
  *
  * <p>
  * Important Notes:
  *
- * <ul>
+ * <ol>
  * <li>Despite an existing {@code TestInstance} annotation set to
  * {@code Lifecycle.PER_CLASS}, it seems classes share the same instance of the
  * repositories, so the user repository is cleaned with {@code breakdownAll()}.
@@ -100,6 +112,27 @@ public class UserAndSecurityTestTemplate {
 
     protected RequestPostProcessor adminInfo() {
         return user(userDetailsService.loadUserByUsername("testAdmin"));
+    }
+
+    protected void postApiRandomShorturl(RequestPostProcessor userInfo) throws Exception {
+        mockMvc.perform(
+            post(SHORTURL_API)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(toJson(randomShortURL()))
+            .with(userInfo)
+            .with(csrf()))
+            .andExpect(status().isCreated());
+    }
+
+    protected void getApiShorturlsAsUserExpectAmount(RequestPostProcessor userInfo, int expectedAmount) throws Exception {
+        mockMvc.perform(
+            get(SHORTURL_API)
+            .with(userInfo)
+            .with(csrf()))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString(
+                String.format("\"totalElements\" : %d", expectedAmount)
+            )));
     }
 
 }
