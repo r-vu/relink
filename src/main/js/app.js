@@ -13,7 +13,7 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {shortURLs: [], attributes: [], pageSize: 5, links: []};
+        this.state = {shortURLs: [], attributes: [], pageSize: 10, links: []};
         this.onCreate = this.onCreate.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
@@ -141,7 +141,7 @@ class ShortURLList extends React.Component {
     handleInput(e) {
         e.preventDefault();
         let pageSize = ReactDOM.findDOMNode(this.refs.pageSize).value;
-        if (/^[0-9]+$/.test(pageSize)) {
+        if (/^[1-9]{1}[0-9]*$/.test(pageSize)) {
             this.props.updatePageSize(pageSize);
         } else {
             ReactDOM.findDOMNode(this.refs.pageSize).value =
@@ -175,19 +175,15 @@ class ShortURLList extends React.Component {
         );
 
         let dummyShortURL = <DummyShortURL />
-
+        let btnLinkMap = new Map();
+        btnLinkMap.set("first", [this.handleNavFirst, "First"]);
+        btnLinkMap.set("prev", [this.handleNavPrev, "Previous"]);
+        btnLinkMap.set("next", [this.handleNavNext, "Next"]);
+        btnLinkMap.set("last", [this.handleNavNext, "Last"]);
         let navLinks = [];
-        if ("first" in this.props.links) {
-            navLinks.push(<button key="first" onClick={this.handleNavFirst}>First</button>)
-        }
-        if ("prev" in this.props.links) {
-            navLinks.push(<button key="prev" onClick={this.handleNavPrev}>Previous</button>)
-        }
-        if ("next" in this.props.links) {
-            navLinks.push(<button key="next" onClick={this.handleNavNext}>Next</button>)
-        }
-        if ("last" in this.props.links) {
-            navLinks.push(<button key="last" onClick={this.handleNavLast}>Last</button>)
+
+        for (let [k, v] of btnLinkMap) {
+            navLinks.push(<Button key={k} onClick={v[0]} disabled={!(k in this.props.links)}>{v[1]}</Button>)
         }
 
         return (
@@ -198,6 +194,7 @@ class ShortURLList extends React.Component {
                         <InputGroup.Text>Maximum Table Size</InputGroup.Text>
                     </InputGroup.Prepend>
                     <FormControl ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput} />
+                    <InputGroup.Append>{navLinks}</InputGroup.Append>
                 </InputGroup>
                 <Table striped bordered hover>
                     <thead className="thead-dark">
@@ -214,9 +211,6 @@ class ShortURLList extends React.Component {
                         {shortURLs}
                     </tbody>
                 </Table>
-                <div>
-                    {navLinks}
-                </div>
             </div>
         )
     }
