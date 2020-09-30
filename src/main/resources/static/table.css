@@ -5,3 +5,7 @@ input.field {
 .navbar {
     position: static;
 }
+
+.btnshorturl {
+    width: 58px;
+}

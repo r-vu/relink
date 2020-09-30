@@ -208,7 +208,7 @@ class ShortURLList extends React.Component {
                     <FormControl ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput} />
                     <InputGroup.Append>{navLinks}</InputGroup.Append>
                 </InputGroup>
-                <Table striped bordered hover>
+                <Table striped bordered hover className="text-break" style={{"tableLayout": "fixed"}}>
                     <thead className="thead-dark">
                         <tr>
                             <th>Name</th>
@@ -261,9 +261,9 @@ class ShortURL extends React.Component {
                 {/* {shortURLProps} */}
                 <td>
                     {/* <Button variant="warning" size="sm" shortURL={this.props.shortURL} onUpdate={this.props.onUpdate}>Edit</Button>{" "} */}
-                    <Button variant="success" size="sm" onClick={this.copyToClipboard}>Copy</Button> {" "}
+                    <Button className="btnshorturl" variant="success" size="sm" onClick={this.copyToClipboard}>Copy</Button> {" "}
                     <UpdateDialog shortURL={this.props.shortURL} onUpdate={this.props.onUpdate}>Edit</UpdateDialog> {" "}
-                    <Button variant="danger" size="sm" onClick={this.handleDelete}>Delete</Button>
+                    <Button className="btnshorturl" variant="danger" size="sm" onClick={this.handleDelete}>Delete</Button>
                 </td>
             </tr>
         )
@@ -421,7 +421,7 @@ class UpdateDialog extends React.Component {
 
         return (
             <>
-            <Button size="sm" variant="warning" onClick={this.openDialog}>
+            <Button className="btnshorturl" size="sm" variant="warning" onClick={this.openDialog}>
                 Edit
             </Button>
             <Modal show={this.state.showDialog} onHide={this.closeDialog}>
