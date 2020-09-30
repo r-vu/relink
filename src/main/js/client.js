@@ -21,7 +21,7 @@ let csrfHeader = document.getElementsByTagName("meta")["_csrf_header"].getAttrib
 module.exports = rest
     .wrap(csrf, {token: csrfToken, name: csrfHeader})
     .wrap(pathPrefix, {prefix: "/api"})
-    .wrap(template, {template: "shortURLs{?size}", size: 20})
+    .wrap(template, {template: "shortURLs{?page}{&size}", page: 0, size: 10})
     .wrap(mime, { registry: registry })
     // .wrap(uriTemplateInterceptor)
     .wrap(errorCode)

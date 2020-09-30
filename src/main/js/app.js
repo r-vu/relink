@@ -13,16 +13,17 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {shortURLs: [], attributes: [], pageSize: 10, links: []};
+        this.state = {shortURLs: [], attributes: [], pageSize: 10, currPage: 0, links: []};
         this.onCreate = this.onCreate.bind(this);
         this.onDelete = this.onDelete.bind(this);
+        this.onDeleteOne = this.onDeleteOne.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
         this.updatePageSize = this.updatePageSize.bind(this);
     }
 
     componentDidMount() {
-        this.loadFromDatabase(this.state.pageSize);
+        this.loadFromDatabase(this.state.pageSize, this.state.currPage);
     }
 
     render() {
@@ -36,6 +37,7 @@ class App extends React.Component {
                         pageSize={this.state.pageSize}
                         onNavigate={this.onNavigate}
                         onDelete={this.onDelete}
+                        onDeleteOne={this.onDeleteOne}
                         onCreate={this.onCreate}
                         onUpdate={this.onUpdate}
                         attributes={this.state.attributes}
@@ -45,8 +47,8 @@ class App extends React.Component {
         )
     }
 
-    loadFromDatabase(pageSize) {
-        client({params: {"size": pageSize}}).then(
+    loadFromDatabase(pageSize, currPage) {
+        client({params: {"page": currPage, "size": pageSize}}).then(
             shortURLCollection => {
                 return client({
                     method: "GET",
@@ -62,6 +64,7 @@ class App extends React.Component {
                 shortURLs: shortURLCollection.entity._embedded.shortURLs,
                 attributes: Object.keys(this.schema.properties),
                 pageSize: pageSize,
+                currPage: currPage,
                 links: shortURLCollection.entity._links
             });
         });
@@ -76,7 +79,7 @@ class App extends React.Component {
                 headers: {"Content-Type": "application/json"}
             })
         }).then(response => {
-            return client({params: {"size": this.state.pageSize}});
+            return client({params: {"page": this.state.currPage, "size": this.state.pageSize}});
         }).then(response => {
             if (typeof response.entity._links.last !== "undefined") {
                 this.onNavigate(response.entity._links.last.href);
@@ -95,18 +98,25 @@ class App extends React.Component {
                 shortURLs: shortURLCollection.entity._embedded.shortURLs,
                 attributes: this.state.attributes,
                 pageSize: this.state.pageSize,
+                currPage: new URL(uri).searchParams.get("page"),
                 links: shortURLCollection.entity._links
             });
         });
     }
 
-    onDelete(shortURL) {
+    onDelete(shortURL, alone) {
         client({
             method: "DELETE",
             path: shortURL._links.self.href
         }).then(response => {
-            this.loadFromDatabase(this.state.pageSize);
+            this.loadFromDatabase(this.state.pageSize, alone ?
+                (this.state.currPage == 0 ? 0 : this.state.currPage - 1)
+                : this.state.currPage);
         });
+    }
+
+    onDeleteOne(shortURL) {
+        this.onDelete(shortURL, true);
     }
 
     onUpdate(shortURL, updateShortURL) {
@@ -116,13 +126,13 @@ class App extends React.Component {
             entity: updateShortURL,
             headers: {"Content-Type": "application/json"}
         }).then(response => {
-            this.loadFromDatabase(this.state.pageSize);
+            this.loadFromDatabase(this.state.pageSize, this.state.currPage);
         });
     }
 
     updatePageSize(pageSize) {
         if (pageSize !== this.state.pageSize) {
-            this.loadFromDatabase(pageSize);
+            this.loadFromDatabase(pageSize, 0);
         }
     }
 }
@@ -171,7 +181,9 @@ class ShortURLList extends React.Component {
 
     render() {
         let shortURLs = this.props.shortURLs.map(shortURL =>
-                <ShortURL key={shortURL._links.self.href} shortURL={shortURL} onDelete={this.props.onDelete} onUpdate={this.props.onUpdate} />
+                <ShortURL key={shortURL._links.self.href} shortURL={shortURL}
+                onDelete={this.props.shortURLs.length > 1 ? this.props.onDelete : this.props.onDeleteOne}
+                onUpdate={this.props.onUpdate} />
         );
 
         let dummyShortURL = <DummyShortURL />
@@ -179,7 +191,7 @@ class ShortURLList extends React.Component {
         btnLinkMap.set("first", [this.handleNavFirst, "First"]);
         btnLinkMap.set("prev", [this.handleNavPrev, "Previous"]);
         btnLinkMap.set("next", [this.handleNavNext, "Next"]);
-        btnLinkMap.set("last", [this.handleNavNext, "Last"]);
+        btnLinkMap.set("last", [this.handleNavLast, "Last"]);
         let navLinks = [];
 
         for (let [k, v] of btnLinkMap) {
