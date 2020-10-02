@@ -24,7 +24,6 @@ public class RelinkUser {
     private Long id;
 
     private String name;
-
     private String[] roles;
 
     @JsonIgnore
@@ -33,8 +32,8 @@ public class RelinkUser {
     @Column(name = "is_oauth", nullable = false)
     private boolean isOAuth;
 
-    @Column(name = "oauth_uuid")
-    private Integer oauthUuid;
+    @Column(name = "oauth_provider")
+    private Integer oAuthProvider;
 
     protected RelinkUser() {}
 
@@ -46,10 +45,10 @@ public class RelinkUser {
     }
 
     public RelinkUser(OAuth2User oAuth2User) {
-        this.name = oAuth2User.getAttribute("id");
+        this.name = oAuth2User.getName();
         this.roles = new String[] {"ROLE_USER"};
         this.isOAuth = true;
-        this.oauthUuid = oAuth2User.getAttributes().hashCode();
+        this.oAuthProvider = oAuth2User.getAttributes().keySet().hashCode();
     }
 
     public Long getId() {
@@ -72,8 +71,8 @@ public class RelinkUser {
         return isOAuth;
     }
 
-    public int getOauthUuid() {
-        return oauthUuid;
+    public Integer getOAuthProvider() {
+        return oAuthProvider;
     }
 
     public void setName(String name) {
@@ -90,8 +89,8 @@ public class RelinkUser {
 
     @Override
     public String toString() {
-        return String.format("User (ID: %d Name: %s Roles: %s isOAuth: %s OAuthUUID: %s)",
-            id, name, roles, isOAuth, oauthUuid == null ? "" : oauthUuid.toString());
+        return String.format("User (ID: %d Name: %s Roles: %s isOAuth: %s oAuthProvider: %s)",
+            id, name, roles, isOAuth, oAuthProvider == null ? "" : oAuthProvider.toString());
     }
 
     @Override
@@ -107,12 +106,13 @@ public class RelinkUser {
             Objects.equals(password, user.password) &&
             Objects.equals(roles, user.roles) &&
             Objects.equals(isOAuth, user.isOAuth) &&
-            Objects.equals(oauthUuid, user.oauthUuid);
+            Objects.equals(oAuthProvider, user.oAuthProvider);
         }
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, password, roles, isOAuth, oauthUuid);
+        return Objects.hash(id, name, password, roles, isOAuth, oAuthProvider);
     }
+
 }

@@ -11,12 +11,12 @@ public interface RelinkUserRepository extends JpaRepository<RelinkUser, Long> {
     @Deprecated
     RelinkUser findByName(String name);
 
-    @Query("SELECT ru FROM RelinkUser ru WHERE ru.is_oauth IS FALSE " +
+    @Query("SELECT ru FROM RelinkUser ru WHERE ru.isOAuth IS FALSE " +
     "AND ru.name = :name")
     RelinkUser findByNameLocal(@Param("name") String name);
 
-    @Query("SELECT ru FROM RelinkUser ru WHERE ru.is_oauth IS TRUE " +
-    "AND ru.name = :name AND ru.oauth_uuid = :uuid")
-    RelinkUser findByNameOAuth(@Param("name") String name, @Param("uuid") int uuid);
+    @Query("SELECT ru FROM RelinkUser ru WHERE ru.isOAuth IS TRUE " +
+    "AND ru.name = :name AND ru.oAuthProvider = :provider")
+    RelinkUser findByNameOAuth(@Param("name") String name, @Param("provider") int provider);
 
 }
