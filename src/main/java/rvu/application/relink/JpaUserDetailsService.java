@@ -20,7 +20,7 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        RelinkUser relinkUser = this.userRepo.findByName(username);
+        RelinkUser relinkUser = this.userRepo.findByNameLocal(username);
         return new User(relinkUser.getName(), relinkUser.getPassword(), 
         AuthorityUtils.createAuthorityList(relinkUser.getRoles()));
     }

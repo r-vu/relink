@@ -34,7 +34,7 @@ public class CreateDatabaseEntries implements CommandLineRunner {
         // this.userRepo.save(new RelinkUser("user4", "password4"));
         // this.userRepo.save(new RelinkUser("user5", "password5"));
 
-        RelinkUser admin = this.userRepo.findByName("admin");
+        RelinkUser admin = this.userRepo.findByNameLocal("admin");
         if (admin == null) {
             this.userRepo.save(new RelinkUser("admin", "password", "ROLE_USER", "ROLE_ADMIN"));
         }
