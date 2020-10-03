@@ -2,8 +2,11 @@ package rvu.application.relink;
 
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,17 +49,35 @@ public class HomeController {
 
             ShortURL shortURL = shortURLFormData.toShortURL();
             shortURL.setDest(dest);
+
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (auth != null) {
-                RelinkUser owner = userRepo.findByName(auth.getName());
+            if (!(auth instanceof AnonymousAuthenticationToken)) {
+                RelinkUser owner;
+
+                if (auth instanceof OAuth2AuthenticationToken) {
+                    OAuth2User oAuth2User = (OAuth2User) auth.getPrincipal();
+                    owner = userRepo.findByNameOAuth(oAuth2User.getName(), oAuth2User.getAttributes().keySet().hashCode());
+
+                    if (owner == null) {
+                        // First time OAuth user
+                        owner = new RelinkUser(oAuth2User);
+                        userRepo.save(owner);
+                    }
+
+                } else {
+                    owner = userRepo.findByNameLocal(auth.getName());
+                }
+
                 shortURL.setOwner(owner);
             }
+
             shortURLRepo.save(shortURL);
             model.addAttribute("shortURLData", shortURL);
 
         } catch (Exception e) {
             model.addAttribute("exceptionInfo", e.getMessage());
         }
+
         return "success";
     }
 
@@ -75,7 +96,7 @@ public class HomeController {
     public String signup(@ModelAttribute(name = "newUser") RelinkUser newUser, Model model,
         RedirectAttributes rAttributes) {
 
-        if (userRepo.findByName(newUser.getName()) == null) {
+        if (userRepo.findByNameLocal(newUser.getName()) == null) {
             newUser.setRoles(new String[] {"ROLE_USER"});
             userRepo.save(newUser);
             rAttributes.addFlashAttribute("createSuccess", true);
