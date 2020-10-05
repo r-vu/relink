@@ -37,7 +37,7 @@
                 <div th:if="${createSuccess}" class="alert alert-success text-center" role="alert">
                     <strong>Account successfully created!</strong>
                 </div>
-                <h2 class="form-signin-heading text-center mb-5">Sign In</h2>
+                <h3 class="form-signin-heading text-center mb-5">Sign in to Relink</h3>
                 <p>
                     <label for="username" class="sr-only">Username</label>
                     <input size=40 type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
@@ -49,11 +49,19 @@
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
             </form>
 
-            <div class="d-flex justify-content-center">
-                <footer class="footer mb-auto py-3">
-                    <a href="/signup" class="text-info">Create an Account</a>
-                </footer>
+            <div class="d-flex justify-content-center mt-3">
+                <a href="/signup" class="text-info">Create an Account</a>
             </div>
+
+            <div class="row mt-2">
+                <div class="col"><hr></div>
+                <div class="col-auto">or</div>
+                <div class="col"><hr></div>
+            </div>
+
+            <a class="btn btn-md mt-1 github-btn" href="/oauth2/authorization/github">Sign In With Github</a>
+            <a class="btn btn-md mt-1 google-btn" href="/oauth2/authorization/google">Sign In With Google</a>
+
         </div>
     </div>
 </body>
