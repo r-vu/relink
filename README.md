@@ -25,19 +25,28 @@ You can find the live site at **[relink.r-vu.net](https://relink.r-vu.net)**
 
     By default, these properties have been commented out, so the application will default to using an in-memory H2 database, which will have its data be deleted once the application terminates. If you wish to setup your own database connection, you will need to supply the correct URL and credentials for it, as well as the necessary driver if you plan to use something other than PostgreSQL. Other properties can be [found here](https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html).
 
- 3. Run the application
+ 3. **(Optional)** Add OAuth2 credentials in `src/main/resources/application.properties`. By default the application has properties for Github and Google, but other providers can be used.
+
+    ```
+    spring.security.oauth2.client.registration.{PROVIDER}.client-id
+    spring.security.oauth2.client.registration.{PROVIDER}.client-secret
+    spring.security.oauth2.client.registration.{PROVIDER}.scope
+    ```
+
+ 4. Run the application
 
     ```bash
     ./mvnw spring-boot:run
     ```
 
- 4. Access the site at <http://localhost:8080>
+ 5. Access the site at <http://localhost:8080>
 
-By default, a site user account with username **`admin`** and password **`password`** is created for use if not already present.
+By default, a site user account with username **`relinkadmin`** and password **`relinkpassword`** is created for use if not already present.
 
 ## Technologies Used
 
 - RESTful API written in Java with Spring
+- OAuth2 and local user accounts
 - Data is stored in a PostgreSQL database, exposed using JPA
 - Page templating handled using Thymeleaf
 - User interface designed using React and Bootstrap

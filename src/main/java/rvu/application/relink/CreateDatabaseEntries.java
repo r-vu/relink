@@ -18,6 +18,12 @@ public class CreateDatabaseEntries implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+
+        RelinkUser admin = this.userRepo.findByNameLocal("relinkadmin");
+        if (admin == null) {
+            this.userRepo.save(new RelinkUser("relinkadmin", "relinkpassword", "ROLE_USER", "ROLE_ADMIN"));
+        }
+
         // this.shortURLRepo.deleteAll();
         // this.shortURLRepo.save(new ShortURL("Google", "AOL"));
         // this.shortURLRepo.save(new ShortURL("Yahoo", "Netscape"));
@@ -33,11 +39,5 @@ public class CreateDatabaseEntries implements CommandLineRunner {
         // this.userRepo.save(new RelinkUser("user3", "password3"));
         // this.userRepo.save(new RelinkUser("user4", "password4"));
         // this.userRepo.save(new RelinkUser("user5", "password5"));
-
-        RelinkUser admin = this.userRepo.findByNameLocal("admin");
-        if (admin == null) {
-            this.userRepo.save(new RelinkUser("admin", "password", "ROLE_USER", "ROLE_ADMIN"));
-        }
-
     }
 }
