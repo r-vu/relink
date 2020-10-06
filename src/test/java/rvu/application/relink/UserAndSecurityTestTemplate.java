@@ -43,8 +43,8 @@ import org.springframework.web.context.WebApplicationContext;
  * annotation, and the repository initialization methods {@code setupOnce()},
  * {@code breakdownEach()}, {@code breakdownAll()} in order to use the database
  * connection you have set in application.properties or elsewhere. The default
- * account with username {@code admin} and password {@code password} should be
- * created if it does not exist.
+ * account with username {@code relinkadmin} and password {@code relinkpassword}
+ * should be created if it does not exist.
  *
  * <p>
  * Important Notes:
