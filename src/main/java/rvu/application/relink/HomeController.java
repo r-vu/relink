@@ -1,12 +1,10 @@
 package rvu.application.relink;
 
-import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.data.rest.core.event.AfterCreateEvent;
+import org.springframework.data.rest.core.event.BeforeCreateEvent;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class HomeController {
+public class HomeController implements ApplicationEventPublisherAware {
 
     @Autowired
     private ShortURLRepository shortURLRepo;
 
     @Autowired
     private RelinkUserRepository userRepo;
+
+    private ApplicationEventPublisher publisher;
 
     @GetMapping(value = "/")
     public String home(Model model) {
@@ -35,43 +35,16 @@ public class HomeController {
     public String createShortURL(@ModelAttribute ShortURLFormData shortURLFormData, Model model) {
         try {
 
-            String dest = shortURLFormData.getDest();
-            if (!dest.toLowerCase().startsWith("http")) {
-                dest = "https://".concat(dest);
-            }
+            ShortURL shortURL = shortURLFormData.toShortURL();
 
-            String[] schemes = {"http", "https"};
-            UrlValidator validator = new UrlValidator(schemes);
-            if (!validator.isValid(dest)) {
+            if (!shortURL.validateDestination()) {
                 model.addAttribute("invalidURL", true);
                 return "home";
             }
 
-            ShortURL shortURL = shortURLFormData.toShortURL();
-            shortURL.setDest(dest);
-
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (!(auth instanceof AnonymousAuthenticationToken)) {
-                RelinkUser owner;
-
-                if (auth instanceof OAuth2AuthenticationToken) {
-                    OAuth2User oAuth2User = (OAuth2User) auth.getPrincipal();
-                    owner = userRepo.findByNameOAuth(oAuth2User.getName(), oAuth2User.getAttributes().keySet().hashCode());
-
-                    if (owner == null) {
-                        // First time OAuth user
-                        owner = new RelinkUser(oAuth2User);
-                        userRepo.save(owner);
-                    }
-
-                } else {
-                    owner = userRepo.findByNameLocal(auth.getName());
-                }
-
-                shortURL.setOwner(owner);
-            }
-
+            publisher.publishEvent(new BeforeCreateEvent(shortURL));
             shortURLRepo.save(shortURL);
+            publisher.publishEvent(new AfterCreateEvent(shortURL));
             model.addAttribute("shortURLData", shortURL);
 
         } catch (Exception e) {
@@ -94,10 +67,10 @@ public class HomeController {
 
     @PostMapping(value = "/signup")
     public String signup(@ModelAttribute(name = "newUser") RelinkUser newUser, Model model,
-        RedirectAttributes rAttributes) {
+            RedirectAttributes rAttributes) {
 
         if (userRepo.findByNameLocal(newUser.getName()) == null) {
-            newUser.setRoles(new String[] {"ROLE_USER"});
+            newUser.setRoles(new String[] { "ROLE_USER" });
             userRepo.save(newUser);
             rAttributes.addFlashAttribute("createSuccess", true);
             return "redirect:/login";
@@ -105,7 +78,6 @@ public class HomeController {
             return "error";
         }
     }
-
 
     @GetMapping(value = "/table")
     public String table() {
@@ -122,5 +94,10 @@ public class HomeController {
             shortURLRepo.save(shortURL);
             return "redirect:".concat(shortURL.getDest());
         }
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
+        this.publisher = publisher;
     }
 }

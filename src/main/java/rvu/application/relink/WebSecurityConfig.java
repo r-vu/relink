@@ -34,7 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     "/signup",
                     "/to/**",
                     "/built/**",
-                    "/*.css"
+                    "/*.css",
+                    "/api/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             .and().formLogin()
